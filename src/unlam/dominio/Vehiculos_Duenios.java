@@ -1,17 +1,19 @@
 package unlam.dominio;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class Vehiculos_Duenios {
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class Vehiculos_Duenios{
 	
 	private Vehiculo vehiculo;
-	private List<Dueño> dueños;
+	private Set<Dueño> dueños;
 	
 	public Vehiculos_Duenios(Vehiculo vehiculo) {
 		
 		this.vehiculo = vehiculo;
-		this.dueños = new ArrayList<>();
+		this.dueños = new TreeSet<>(Comparator.comparing(Dueño::getDesde));
 	}
 	
 	public void agregarDueño(Dueño dueño) {
@@ -22,7 +24,7 @@ public class Vehiculos_Duenios {
 		return vehiculo;
 	}
 
-	public List<Dueño> getDueños() {
+	public Set<Dueño> getDueños() {
 		return dueños;
 	}
 	

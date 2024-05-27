@@ -11,8 +11,8 @@ public class Dueño extends Persona {
 	private LocalDate desde;
 	private LocalDate hasta;
 	
-	public Dueño(String nombre, String apellido, Integer edad, Integer dni, Integer ID, boolean estadoAuto, LocalDate desde,LocalDate hasta) {
-		super(nombre, apellido, edad, dni, ID);
+	public Dueño(String nombre, String apellido, Integer edad, Integer dni, boolean estadoAuto, LocalDate desde,LocalDate hasta) {
+		super(nombre, apellido, edad, dni);
 		// TODO Auto-generated constructor stub
 		this.esPropetario = estadoAuto;
 		this.desde = desde;
@@ -51,5 +51,5 @@ public class Dueño extends Persona {
 	public void setHasta(LocalDate hasta) {
 		this.hasta = hasta;
 	}
-	
+
 }

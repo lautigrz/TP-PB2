@@ -23,12 +23,6 @@ public class Auto extends Vehiculo{
 		return false;
 	}
 
-	@Override
-	public Double calcularAutonomia() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public Integer getCantidadPuertas() {
 		return cantidadPuertas;
 	}

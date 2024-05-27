@@ -1,5 +1,6 @@
 package unlam.dominio;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,14 +40,52 @@ public class Concesionaria {
 
 			if (v.equals(vehiculo) && saldoPagar >= vehiculo.getPrecio()) {
 
+				agregarVenta(vehiculo, dueñoComprador, LocalDate.now());
 				vehiculos_dueño(vehiculo, dueñoComprador);
-				
+
 				return true;
 			}
 		}
-		
-		return false;
 
+		return false;
+	}
+
+	public List<Vehiculo> obtenerMotos() {
+
+		List<Vehiculo> motos = new ArrayList<>();
+
+		for (Vehiculo v : this.vehiculos) {
+
+			if (v instanceof Moto) {
+
+				motos.add(v);
+			}
+		}
+
+		return motos;
+	}
+	
+	public List<Vehiculo> obtenerAuto() {
+
+		List<Vehiculo> motos = new ArrayList<>();
+
+		for (Vehiculo v : this.vehiculos) {
+
+			if (v instanceof Auto) {
+
+				motos.add(v);
+			}
+		}
+
+		return motos;
+
+	}
+
+	private void agregarVenta(Vehiculo vehiculo, Dueño dueñoComprador, LocalDate now) {
+		// TODO Auto-generated method stub
+		Venta venta = new Venta(vehiculo, dueñoComprador, now);
+
+		this.venta.add(venta);
 	}
 
 	private void vehiculos_dueño(Vehiculo vehiculo, Dueño dueñoComprador) {

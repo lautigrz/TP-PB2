@@ -111,6 +111,13 @@ public abstract class Vehiculo {
 		Vehiculo other = (Vehiculo) obj;
 		return Objects.equals(patente, other.patente);
 	}
+
+	@Override
+	public String toString() {
+		return "Vehiculo [color=" + color + ", modelo=" + modelo + ", patente=" + patente + ", anio=" + anio
+				+ ", kilometros=" + kilometros + ", precio=" + precio + ", capacidadTanque=" + capacidadTanque
+				+ ", motor=" + motor + "]";
+	}
 	
 }
 

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Concesionaria {
+public class Concesionaria implements IConcesionaria{
 	private String nombre;
 	Set<Vehiculo> vehiculos;
 	List<Venta> venta;
@@ -26,14 +26,21 @@ public class Concesionaria {
 		return nombre;
 	}
 
-	public boolean agregarVehiculosParaLaVenta(Vehiculo vehiculo) {
+	public boolean agregarVehiculosParaLaVenta(Vehiculo vehiculo) throws VehiculoInexistenteException {
+		
+		if (vehiculo==null) {
+			throw new VehiculoInexistenteException();
+		}
 		return this.vehiculos.add(vehiculo);
 	}
 
-	public boolean agregarEmpleadosAlaConcesionaria(Empleado empleado) {
+	public boolean agregarEmpleadosAlaConcesionaria(Empleado empleado) throws EmpleadoInexistenteException {
+		if (empleado==null) {
+			throw new EmpleadoInexistenteException();
+		}
 		return this.empleados.add(empleado);
 	}
-
+	@Override
 	public boolean generarVenta(Vehiculo vehiculo, Dueño dueñoComprador, Double saldoPagar) {
 
 		for (Vehiculo v : this.vehiculos) {
@@ -50,46 +57,53 @@ public class Concesionaria {
 		return false;
 	}
 
-	public List<Vehiculo> obtenerMotos() {
+	public List<Moto> obtenerMotos() {
+		/*
+		 * Cambie el tipo de la lista para aplicar polimorfismo y castie el vehiculo
+		 * para que no haya errores
+		 */
 
-		List<Vehiculo> motos = new ArrayList<>();
+		List<Moto> motos = new ArrayList<>();
 
 		for (Vehiculo v : this.vehiculos) {
 
 			if (v instanceof Moto) {
 
-				motos.add(v);
+				motos.add((Moto) v); // Casteo
 			}
 		}
 
 		return motos;
 	}
-	
-	public List<Vehiculo> obtenerAuto() {
 
-		List<Vehiculo> motos = new ArrayList<>();
+	public List<Auto> obtenerAutos() {
+		/*
+		 * Cambie el tipo de la lista para aplicar polimorfismo y castie el vehiculo
+		 * para que no haya errores
+		 */
+
+		List<Auto> autos = new ArrayList<>();
 
 		for (Vehiculo v : this.vehiculos) {
 
 			if (v instanceof Auto) {
 
-				motos.add(v);
+				autos.add((Auto) v);// Casteo
 			}
 		}
 
-		return motos;
+		return autos;
 
 	}
 
 	private void agregarVenta(Vehiculo vehiculo, Dueño dueñoComprador, LocalDate now) {
-		// TODO Auto-generated method stub
+
 		Venta venta = new Venta(vehiculo, dueñoComprador, now);
 
 		this.venta.add(venta);
 	}
 
 	private void vehiculos_dueño(Vehiculo vehiculo, Dueño dueñoComprador) {
-		// TODO Auto-generated method stub
 
 		for (Vehiculos_Duenios v : listaDuenios) {
 
@@ -104,6 +118,48 @@ public class Concesionaria {
 			}
 		}
 
+	}
+
+	// Agregado Por Jhony metodo para mostrar la lista de vehiculos y comprobar que
+	// no este vacio
+	// usando exeption.
+	
+	@Override
+	public Set<Vehiculo> listaVehiculosDisponiblesParaVender() throws ConcesionariaVaciaException {
+
+		if (!this.vehiculos.isEmpty()) {
+			return this.vehiculos;
+		}
+
+		throw new ConcesionariaVaciaException("Concesionaria sin Vehiculos disponibles.");
+	}
+
+	// Agregado Por Jhony metodo para mostrar la lista de autos y comprobar que no
+	// este vacio usando exeption.
+	
+	@Override
+	public List<Auto> listaAutosDisponiblesParaVender() throws ConcesionariaVaciaDeAutosException {
+
+		List<Auto> listaAutos = obtenerAutos();
+
+		if (!listaAutos.isEmpty()) {
+			return listaAutos;
+		}
+		throw new ConcesionariaVaciaDeAutosException("Concesionaria sin Autos disponibles.");
+	}
+
+	// Agregado Por Jhony metodo para mostrar la lista de Motos y comprobar que no
+	// este vacio usando exeption.
+	
+	@Override
+	public List<Moto> listaMotosDisponiblesParaVender() throws ConcesionariaVaciaDeMotosException {
+		List<Moto> listaMotos = obtenerMotos();
+
+		if (!listaMotos.isEmpty()) {
+			return listaMotos;
+		}
+
+		throw new ConcesionariaVaciaDeMotosException("Concesionaria sin Autos disponibles.");
 	}
 
 }

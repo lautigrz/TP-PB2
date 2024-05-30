@@ -2,17 +2,19 @@ package unlam.dominio;
 
 public class Moto extends Vehiculo {
 	
-	public Moto(String color, String modelo, String patente, Integer anio, Integer cantidadRuedas, Double kilometros,
-			Double precio,Integer capacidadTanque, Motor motor) {
-		super(color, modelo, patente, anio, kilometros, precio, capacidadTanque, motor);
+	private static final int NO_PAGA_PATENTE = 20;
+	private static final Double CONSUMO_KILOMETRO_MOTO= 5.0;
+	
+	public Moto(String color, String modelo, String patente, Integer anio, Double kilometros,
+			Double precio,Integer capacidadTanque, Motor motor, Integer aniosDeUso) {
+		super(color, modelo, patente, anio, kilometros, precio, capacidadTanque, motor, aniosDeUso);
 	}
 
 	
 
 	@Override
 	public Double calcularAutonomiaDeVehiculo() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getCapacidadTanque() / CONSUMO_KILOMETRO_MOTO;
 	}
 
 
@@ -26,9 +28,12 @@ public class Moto extends Vehiculo {
 
 
 	@Override
-	public boolean calcularSipagaPatente() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean calcularSiPagaPatente() {
+		boolean paga = false;
+		if (this.getAniosDeUso()>= NO_PAGA_PATENTE) {
+			paga = true;
+		}
+		return paga;
 	}
 
 }

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Concesionaria implements IConcesionaria{
+public class Concesionaria implements IConcesionaria {
 	private String nombre;
 	Set<Vehiculo> vehiculos;
 	List<Venta> venta;
@@ -27,19 +27,20 @@ public class Concesionaria implements IConcesionaria{
 	}
 
 	public boolean agregarVehiculosParaLaVenta(Vehiculo vehiculo) throws VehiculoInexistenteException {
-		
-		if (vehiculo==null) {
+
+		if (vehiculo == null) {
 			throw new VehiculoInexistenteException();
 		}
 		return this.vehiculos.add(vehiculo);
 	}
 
 	public boolean agregarEmpleadosAlaConcesionaria(Empleado empleado) throws EmpleadoInexistenteException {
-		if (empleado==null) {
+		if (empleado == null) {
 			throw new EmpleadoInexistenteException();
 		}
 		return this.empleados.add(empleado);
 	}
+
 	@Override
 	public boolean generarVenta(Vehiculo vehiculo, Dueño dueñoComprador, Double saldoPagar) {
 
@@ -55,6 +56,18 @@ public class Concesionaria implements IConcesionaria{
 		}
 
 		return false;
+	}
+
+	public Vehiculo buscarVehiculoPorPatente(String patente){
+		Vehiculo buscado = null;
+		
+		for (Vehiculo vehiculo : vehiculos) {
+			if (vehiculo.getPatente().equals(patente)) {
+				buscado = vehiculo;
+				break;
+			}
+		}
+		return buscado;
 	}
 
 	public List<Moto> obtenerMotos() {
@@ -123,7 +136,7 @@ public class Concesionaria implements IConcesionaria{
 	// Agregado Por Jhony metodo para mostrar la lista de vehiculos y comprobar que
 	// no este vacio
 	// usando exeption.
-	
+
 	@Override
 	public Set<Vehiculo> listaVehiculosDisponiblesParaVender() throws ConcesionariaVaciaException {
 
@@ -136,7 +149,7 @@ public class Concesionaria implements IConcesionaria{
 
 	// Agregado Por Jhony metodo para mostrar la lista de autos y comprobar que no
 	// este vacio usando exeption.
-	
+
 	@Override
 	public List<Auto> listaAutosDisponiblesParaVender() throws ConcesionariaVaciaDeAutosException {
 
@@ -150,7 +163,7 @@ public class Concesionaria implements IConcesionaria{
 
 	// Agregado Por Jhony metodo para mostrar la lista de Motos y comprobar que no
 	// este vacio usando exeption.
-	
+
 	@Override
 	public List<Moto> listaMotosDisponiblesParaVender() throws ConcesionariaVaciaDeMotosException {
 		List<Moto> listaMotos = obtenerMotos();

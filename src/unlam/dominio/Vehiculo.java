@@ -3,6 +3,7 @@ package unlam.dominio;
 import java.util.Objects;
 
 public abstract class Vehiculo {
+
 	private String color;
 	private String modelo;
 	private String patente;
@@ -11,9 +12,10 @@ public abstract class Vehiculo {
 	private Double precio;
 	private Integer capacidadTanque;
 	private Motor motor;
+	private Integer aniosDeUso;
 	
 	public Vehiculo(String color, String modelo, String patente, Integer anio,
-			Double kilometros, Double precio, Integer capacidadTanque, Motor motor) {
+			Double kilometros, Double precio, Integer capacidadTanque, Motor motor, Integer aniosDeUso) {
 		super();
 		this.color = color;
 		this.modelo = modelo;
@@ -23,10 +25,11 @@ public abstract class Vehiculo {
 		this.precio = precio;
 		this.capacidadTanque = capacidadTanque;
 		this.motor = motor;
+		this.aniosDeUso = aniosDeUso;
 	}
 	
 	public abstract Integer calcularEstadoEnPorcentajeDelVehiculo();
-	public abstract boolean calcularSipagaPatente();
+	public abstract boolean calcularSiPagaPatente();
 	public abstract Double calcularAutonomiaDeVehiculo();
 	
 
@@ -94,7 +97,18 @@ public abstract class Vehiculo {
 	public void setCapacidadTanque(Integer capacidadTanque) {
 		this.capacidadTanque = capacidadTanque;
 	}
+	
+	
 
+	public Integer getAniosDeUso() {
+		return aniosDeUso;
+	}
+
+	public void setAniosDeUso(Integer aniosDeUso) {
+		this.aniosDeUso = aniosDeUso;
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(patente);

@@ -1,5 +1,5 @@
 package unlam.dominio;
 
-public class VehiculoInexistenteException extends Exception {
+public class VehiculoInexistenteException extends NullPointerException {
 
 }

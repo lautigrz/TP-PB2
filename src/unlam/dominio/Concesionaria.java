@@ -58,54 +58,55 @@ public class Concesionaria implements IConcesionaria {
 		return false;
 	}
 
-	public Vehiculo buscarVehiculoPorPatente(String patente){
-		Vehiculo buscado = null;
-		
+	public Vehiculo buscarVehiculoPorPatente(String patente) throws VehiculoInexistenteException {
+
 		for (Vehiculo vehiculo : vehiculos) {
 			if (vehiculo.getPatente().equals(patente)) {
-				buscado = vehiculo;
-				break;
+				return vehiculo;
 			}
 		}
-		return buscado;
+		throw new VehiculoInexistenteException();// agregue el exception y modifique un poco la estructura del metodo
 	}
 
-	public List<Moto> obtenerMotos() {
+	public List<Moto> obtenerMotos() throws ConcesionariaVaciaDeMotosException {
 		/*
 		 * Cambie el tipo de la lista para aplicar polimorfismo y castie el vehiculo
 		 * para que no haya errores
 		 */
 
 		List<Moto> motos = new ArrayList<>();
+		if(this.vehiculos.size()!=0) {
+			for (Vehiculo v : this.vehiculos) {
 
-		for (Vehiculo v : this.vehiculos) {
+				if (v instanceof Moto) {
 
-			if (v instanceof Moto) {
-
-				motos.add((Moto) v); // Casteo
+					motos.add((Moto) v); // Casteo
+				}
 			}
 		}
-
-		return motos;
+		throw new ConcesionariaVaciaDeMotosException("");
 	}
 
-	public List<Auto> obtenerAutos() {
+	public List<Auto> obtenerAutos() throws ConcesionariaVaciaDeAutosException {
 		/*
 		 * Cambie el tipo de la lista para aplicar polimorfismo y castie el vehiculo
 		 * para que no haya errores
 		 */
 
 		List<Auto> autos = new ArrayList<>();
+		if(this.vehiculos.size() != 0) {
+		
+			for (Vehiculo v : this.vehiculos) {
 
-		for (Vehiculo v : this.vehiculos) {
+				if (v instanceof Auto) {
 
-			if (v instanceof Auto) {
-
-				autos.add((Auto) v);// Casteo
+					autos.add((Auto) v);// Casteo
+				}
 			}
+			return autos;
 		}
-
-		return autos;
+		
+		throw new ConcesionariaVaciaDeAutosException("");
 
 	}
 

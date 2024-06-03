@@ -1,7 +1,5 @@
 package unlam.dominio;
 
-
-import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -13,7 +11,7 @@ public class Vehiculos_Duenios{
 	public Vehiculos_Duenios(Vehiculo vehiculo) {
 		
 		this.vehiculo = vehiculo;
-		this.dueños = new TreeSet<>(Comparator.comparing(Dueño::getDesde));
+		this.dueños = new TreeSet<>();
 	}
 	
 	public void agregarDueño(Dueño dueño) {

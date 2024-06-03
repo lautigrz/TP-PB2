@@ -5,9 +5,9 @@ public class Auto extends Vehiculo {
 	private static final Double CONSUMO_KILOMETRO_AUTO = 8.0;
 	private Integer cantidadPuertas;
 
-	public Auto(String color, String modelo, String patente, Integer anio, Double kilometros, Double precio,
+	public Auto(String color, String modelo, String patente, String marca, Integer anio, Double kilometros, Double precio,
 			Motor motor, Integer cantidadPuertas, Integer capacidadTanque, Integer aniosDeUso) {
-		super(color, modelo, patente, anio, kilometros, precio, capacidadTanque, motor, aniosDeUso);
+		super(color, modelo, patente, marca, anio, kilometros, precio, capacidadTanque, motor, aniosDeUso);
 		// TODO Auto-generated constructor stub
 		this.cantidadPuertas = cantidadPuertas;
 	}

@@ -7,6 +7,7 @@ public abstract class Vehiculo {
 	private String color;
 	private String modelo;
 	private String patente;
+	private String marca;
 	private Integer anio;
 	private Double kilometros;
 	private Double precio;
@@ -14,12 +15,13 @@ public abstract class Vehiculo {
 	private Motor motor;
 	private Integer aniosDeUso;
 	
-	public Vehiculo(String color, String modelo, String patente, Integer anio,
+	public Vehiculo(String color, String modelo, String patente, String marca, Integer anio,
 			Double kilometros, Double precio, Integer capacidadTanque, Motor motor, Integer aniosDeUso) {
 		super();
 		this.color = color;
 		this.modelo = modelo;
 		this.patente = patente;
+		this.marca = marca;
 		this.anio = anio;
 		this.kilometros = kilometros;
 		this.precio = precio;
@@ -99,6 +101,14 @@ public abstract class Vehiculo {
 	}
 	
 	
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
 
 	public Integer getAniosDeUso() {
 		return aniosDeUso;

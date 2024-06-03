@@ -4,7 +4,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
+
+import org.junit.Before;
+
+import exepciones.unlam.PreferenciasNoEncontradasException;
+import exepciones.unlam.VentaException;
+import exepciones.unlam.empleadosInexistentesEnConcesionaria;
 
 public class Concesionaria implements IConcesionaria {
 	private String nombre;
@@ -15,11 +22,22 @@ public class Concesionaria implements IConcesionaria {
 
 	public Concesionaria(String nombre) {
 		super();
-		this.nombre = nombre;
+		
 		this.vehiculos = new HashSet<>();
-		this.venta = new ArrayList<>();
 		this.listaDuenios = new ArrayList<>();
+		inicializarAgregados();
+		this.nombre = nombre;
+		this.venta = new ArrayList<>();
 		this.empleados = new HashSet<>();
+	}
+
+	private void inicializarAgregados() {
+		// TODO Auto-generated method stub
+		AgregadorPredeterminados agregados = new AgregadorPredeterminados();
+		agregados.vehiculosPredeterminadosEnLaLista();
+
+		vehiculos.addAll(agregados.getVehiculos());
+		listaDuenios.addAll(agregados.getListaDuenios());
 	}
 
 	public String getNombre() {
@@ -34,30 +52,58 @@ public class Concesionaria implements IConcesionaria {
 		return this.vehiculos.add(vehiculo);
 	}
 
-	public boolean agregarEmpleadosAlaConcesionaria(Empleado empleado) throws EmpleadoInexistenteException {
+	public boolean agregarEmpleadosAlaConcesionaria(Empleado empleado) throws empleadosInexistentesEnConcesionaria {
 		if (empleado == null) {
-			throw new EmpleadoInexistenteException();
+			throw new empleadosInexistentesEnConcesionaria("");
 		}
 		return this.empleados.add(empleado);
 	}
 
+	public List<Vehiculo> obtenerVehiculosConPreferencias(Integer preferenciaAnio, Double preferenciaKilometros)
+			throws PreferenciasNoEncontradasException {
+
+		List<Vehiculo> vehiculos = new ArrayList<>();
+
+		for (Vehiculo v : this.vehiculos) {
+
+			if (v.getAnio().equals(preferenciaAnio) && v.getKilometros().equals(preferenciaKilometros)) {
+
+				vehiculos.add(v);
+			}
+
+		}
+
+		if (vehiculos.isEmpty()) {
+			throw new PreferenciasNoEncontradasException("No se encontraron vehículos con las preferencias elegidas");
+		}
+
+		return vehiculos;
+	}
+
 	@Override
-	public boolean generarVenta(Vehiculo vehiculo, Dueño dueñoComprador, Double saldoPagar) {
+	public boolean generarVenta(Vehiculo vehiculo, Dueño dueñoComprador, Double saldoPagar)
+			throws empleadosInexistentesEnConcesionaria, VentaException {
+		
+		
+		Empleado empleado = obtenerEmpleado();
+
+		if (empleado == null) {
+			new empleadosInexistentesEnConcesionaria("No existe empleado para generar venta");
+		}
 
 		for (Vehiculo v : this.vehiculos) {
 
 			if (v.equals(vehiculo) && saldoPagar >= vehiculo.getPrecio()) {
 
-				agregarVenta(vehiculo, dueñoComprador, LocalDate.now());
-				vehiculos_dueño(vehiculo, dueñoComprador);
-
+				 procesarVenta(vehiculo,dueñoComprador, empleado);
+				
 				return true;
 			}
 		}
 
 		return false;
 	}
-
+	
 	public Vehiculo buscarVehiculoPorPatente(String patente) throws VehiculoInexistenteException {
 
 		for (Vehiculo vehiculo : vehiculos) {
@@ -75,7 +121,7 @@ public class Concesionaria implements IConcesionaria {
 		 */
 
 		List<Moto> motos = new ArrayList<>();
-		if(this.vehiculos.size()!=0) {
+		if (this.vehiculos.size() != 0) {
 			for (Vehiculo v : this.vehiculos) {
 
 				if (v instanceof Moto) {
@@ -94,8 +140,8 @@ public class Concesionaria implements IConcesionaria {
 		 */
 
 		List<Auto> autos = new ArrayList<>();
-		if(this.vehiculos.size() != 0) {
-		
+		if (this.vehiculos.size() != 0) {
+
 			for (Vehiculo v : this.vehiculos) {
 
 				if (v instanceof Auto) {
@@ -105,33 +151,46 @@ public class Concesionaria implements IConcesionaria {
 			}
 			return autos;
 		}
-		
+
 		throw new ConcesionariaVaciaDeAutosException("");
 
 	}
 
-	private void agregarVenta(Vehiculo vehiculo, Dueño dueñoComprador, LocalDate now) {
 
-		Venta venta = new Venta(vehiculo, dueñoComprador, now);
+	public void vehiculos_dueño(Vehiculo vehiculo, Dueño dueñoComprador) {
 
-		this.venta.add(venta);
+		 boolean encontrado = false;
+		    
+		    for (Vehiculos_Duenios v : listaDuenios) {
+		        if (v.getVehiculo().equals(vehiculo)) {
+		            v.agregarDueño(dueñoComprador);
+		            encontrado = true;
+		            break;
+		        }
+		    }
+
+		    if (!encontrado) {
+		        Vehiculos_Duenios vehi = new Vehiculos_Duenios(vehiculo);
+		        vehi.agregarDueño(dueñoComprador);
+		        this.listaDuenios.add(vehi);
+		    }
+
 	}
 
-	private void vehiculos_dueño(Vehiculo vehiculo, Dueño dueñoComprador) {
+	public Set<Dueño> buscarVehiculoPorPatenteYObtenerSusDueños(String patente) throws VehiculoInexistenteException {
+
+		Vehiculo vehiculo = buscarVehiculoPorPatente(patente);
 
 		for (Vehiculos_Duenios v : listaDuenios) {
 
 			if (v.getVehiculo().equals(vehiculo)) {
 
-				v.agregarDueño(dueñoComprador);
-			} else {
-
-				Vehiculos_Duenios vehi = new Vehiculos_Duenios(vehiculo);
-
-				this.listaDuenios.add(vehi);
+				return v.getDueños();
 			}
+
 		}
 
+		throw new VehiculoInexistenteException();// agregue el exception y modifique un poco la estructura del metodo
 	}
 
 	// Agregado Por Jhony metodo para mostrar la lista de vehiculos y comprobar que
@@ -174,6 +233,58 @@ public class Concesionaria implements IConcesionaria {
 		}
 
 		throw new ConcesionariaVaciaDeMotosException("Concesionaria sin Autos disponibles.");
+	}
+
+	public Empleado obtenerEmpleado() throws empleadosInexistentesEnConcesionaria {
+
+		List<Empleado> empleadoParaBuscar = new ArrayList<>(this.empleados);
+
+		if (empleadoParaBuscar.isEmpty()) {
+			throw new empleadosInexistentesEnConcesionaria("No existen empleados");
+		}
+
+		Random random = new Random();
+		Integer numEmpleado = random.nextInt(empleadoParaBuscar.size());
+
+		return empleadoParaBuscar.get(numEmpleado);
+
+	}
+	
+	
+	public Set<Empleado> getEmpleados() {
+		return empleados;
+	}
+
+	private void procesarVenta(Vehiculo vehiculo, Dueño dueñoComprador, Empleado empleado) throws VentaException  {
+		  try {
+		        // Agregar la venta
+		        agregarVenta(vehiculo, dueñoComprador, LocalDate.now());
+
+		        // Asociar el vehículo con el nuevo dueño
+		        vehiculos_dueño(vehiculo, dueñoComprador);
+
+		        // Registrar el vehículo vendido por el empleado
+		        empleado.agregarVehiculoVendidoPorEmpleado(vehiculo);
+
+		        // Eliminar el vehículo del inventario
+		       // eliminarVehiculoYaVendido(vehiculo);
+		    } catch (Exception e) {
+		        // Lanza la excepción personalizada si ocurre algún error
+		        throw new VentaException("Error al procesar la venta del vehículo: " + vehiculo, e);
+		    }
+	}
+	
+	
+
+	private void agregarVenta(Vehiculo vehiculo, Dueño dueñoComprador, LocalDate now) {
+
+		Venta venta = new Venta(vehiculo, dueñoComprador, now);
+		
+		this.venta.add(venta);
+	}
+	
+	private void eliminarVehiculoYaVendido(Vehiculo vehiculo) {
+		this.vehiculos.remove(vehiculo);
 	}
 
 }

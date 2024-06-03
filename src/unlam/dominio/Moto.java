@@ -5,9 +5,9 @@ public class Moto extends Vehiculo {
 	private static final int NO_PAGA_PATENTE = 20;
 	private static final Double CONSUMO_KILOMETRO_MOTO = 5.0;
 
-	public Moto(String color, String modelo, String patente, Integer anio, Double kilometros, Double precio,
+	public Moto(String color, String modelo, String patente, String marca, Integer anio, Double kilometros, Double precio,
 			Integer capacidadTanque, Motor motor, Integer aniosDeUso) {
-		super(color, modelo, patente, anio, kilometros, precio, capacidadTanque, motor, aniosDeUso);
+		super(color, modelo, patente, marca, anio, kilometros, precio, capacidadTanque, motor, aniosDeUso);
 	}
 
 	@Override

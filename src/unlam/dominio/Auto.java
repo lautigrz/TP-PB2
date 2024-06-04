@@ -5,25 +5,28 @@ public class Auto extends Vehiculo {
 	private static final Double CONSUMO_KILOMETRO_AUTO = 8.0;
 	private Integer cantidadPuertas;
 
-	public Auto(String color, String modelo, String patente, String marca, Integer anio, Double kilometros, Double precio,
-			Motor motor, Integer cantidadPuertas, Integer capacidadTanque, Integer aniosDeUso) {
+	public Auto(String color, String modelo, String patente, String marca, Integer anio, Double kilometros,
+			Double precio, Motor motor, Integer cantidadPuertas, Integer capacidadTanque, Integer aniosDeUso) {
 		super(color, modelo, patente, marca, anio, kilometros, precio, capacidadTanque, motor, aniosDeUso);
 		// TODO Auto-generated constructor stub
 		this.cantidadPuertas = cantidadPuertas;
 	}
 
 	@Override
-	public Integer calcularEstadoEnPorcentajeDelVehiculo() {
-		if (this.getKilometros() >= 250000.0 && this.getKilometros() <= 290000.0) {
-			return 90;
+	public Integer calcularEstadoEnPorcentajeDelVehiculo() throws VehiculoNoAptoParaFuncionarException {
+		if (this.getKilometros() < 250000.0) {
+			return 100;
 		}
-		if (this.getKilometros() > 290000.0 && this.getKilometros() <= 340000.0) {
+		if (this.getKilometros() >= 250000.0 && this.getKilometros() <= 290000.0) {
 			return 80;
 		}
-		if (this.getKilometros() > 340000.0 && this.getKilometros() <= 450000.0) {
+		if (this.getKilometros() > 290000.0 && this.getKilometros() <= 340000.0) {
 			return 70;
 		}
-		return 100;
+		if (this.getKilometros() > 340000.0 && this.getKilometros() <= 450000.0) {
+			return 60;
+		}
+		throw new VehiculoNoAptoParaFuncionarException();
 	}
 
 	@Override

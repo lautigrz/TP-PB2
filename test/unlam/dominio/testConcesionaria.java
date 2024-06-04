@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import org.junit.Before;
 import org.junit.Test;
 
+import exepciones.unlam.PreferenciasNoEncontradasException;
 import exepciones.unlam.VentaException;
 import exepciones.unlam.empleadosInexistentesEnConcesionaria;
 
@@ -89,7 +90,7 @@ public class testConcesionaria {
 	}
 
 	@Test
-	public void queSePuedaCalcularLaAutonomiaDeUnVehiculoMotoDeLaConcesionaria() { // Falta exception
+	public void queSePuedaCalcularLaAutonomiaDeUnVehiculoMotoDeLaConcesionaria() { // Exception Hecho
 		Motor motor = crearMotor(2, 2.2, 1, TipoCombustible.DIESEL, tipoCajaDeCambios.MANUAL);
 		Vehiculo motoUno = ingresarMotoEnLaConcesionaria("Rojo", "a", "b", "Ford", 2003, 0.0, 12000.0, 110, motor, 10);
 		Double valor = motoUno.calcularAutonomiaDeVehiculo();
@@ -100,12 +101,65 @@ public class testConcesionaria {
 	}
 
 	@Test
-	public void queSePuedaCalcularSiUnVehiculoDeLaConcesionariaPagaPatente() {// falta exception
+	public void queSePuedaCalcularElEstadoEnPorcentajeDelVehiculo() {// Exception hecho
+
+		Motor motor = crearMotor(2, 2.2, 1, TipoCombustible.DIESEL, tipoCajaDeCambios.MANUAL);
+		Vehiculo nuevoAuto = ingresarAutoEnLaConcesionaria("Rojo", "Up", "OGA634", "Ford", 2012, 0.0, 20000.0, motor, 4,
+				45000, 20);
+
+		Integer valor = nuevoAuto.calcularEstadoEnPorcentajeDelVehiculo();
+		Integer valorEsperado = 100;
+
+		assertEquals(valorEsperado, valor);
+
+	}
+
+	@Test
+	public void queSePuedaCalcularSiUnVehiculoDeLaConcesionariaPagaPatente() {// Exception Hecho
 		Motor motor = crearMotor(2, 2.2, 1, TipoCombustible.DIESEL, tipoCajaDeCambios.MANUAL);
 		Vehiculo motoUno = ingresarMotoEnLaConcesionaria("Rojo", "a", "b", "Ford", 2003, 0.0, 12000.0, 110, motor, 25);
 		Boolean obtenido = motoUno.calcularSiPagaPatente();
 
 		assertTrue(obtenido);
+
+	}
+
+	@Test
+	public void queSePuedaBuscarUnVehiculoPorPreferenciasDeAnioYKilometraje() throws PreferenciasNoEncontradasException {
+		Motor motor = crearMotor(2, 2.2, 1, TipoCombustible.DIESEL, tipoCajaDeCambios.MANUAL);
+		Integer anio = 2003;
+		Double kilometros = 270000.0;
+		
+		Vehiculo motoUno = ingresarMotoEnLaConcesionaria("Rojo", "a", "b", "Ford", anio, kilometros, 12000.0, 110, motor, 20);
+		conce.agregarVehiculosParaLaVenta(motoUno);
+		
+		List<Vehiculo> vehiculos = new ArrayList<>();
+		vehiculos = conce.obtenerVehiculosConPreferencias(anio, kilometros);
+		
+		assertEquals(1, vehiculos.size());
+	}
+	
+	
+	
+	
+	@Test(expected = PreferenciasNoEncontradasException.class)
+	public void queNoSeEncuentreUnVehiculoPorPreferencias() throws PreferenciasNoEncontradasException {
+		Motor motor = crearMotor(2, 2.2, 1, TipoCombustible.DIESEL, tipoCajaDeCambios.MANUAL);
+		Vehiculo motoUno = ingresarMotoEnLaConcesionaria("Rojo", "a", "b", "Ford", 2003, 0.0, 12000.0, 110, motor, 25);
+		conce.agregarVehiculosParaLaVenta(motoUno);
+		
+		List<Vehiculo> vehiculos = new ArrayList<>();
+		vehiculos = conce.obtenerVehiculosConPreferencias(1970, 0.0);
+		
+	}
+	
+
+	@Test(expected = AniosIngresadosIncorrectosException.class)
+	public void queLosAniosDeUsoSeanIncorrectosYSalteElException() throws AniosIngresadosIncorrectosException {
+		Motor motor = crearMotor(2, 2.2, 1, TipoCombustible.DIESEL, tipoCajaDeCambios.MANUAL);
+		Vehiculo motoUno = ingresarMotoEnLaConcesionaria("Rojo", "a", "b", "Ford", 2003, 0.0, 12000.0, 110, motor, -1);
+
+		motoUno.calcularSiPagaPatente();
 
 	}
 
@@ -169,51 +223,51 @@ public class testConcesionaria {
 		assertEquals(2, dueños.size());
 
 	}
-	
+
 	@Test
 	public void queSeGenereUnaVenta() throws empleadosInexistentesEnConcesionaria, VentaException {
 		Empleado empleado = new Empleado("Iron", "Man", 25, 46756987);
 		conce.agregarEmpleadosAlaConcesionaria(empleado);
 		Vehiculo vehiculo = conce.buscarVehiculoPorPatente("ABC123");
-		Dueño dueño = crearDueño("Mauro", "Lombardo",29,47890912, true, LocalDate.now(), null);
-		
+		Dueño dueño = crearDueño("Mauro", "Lombardo", 29, 47890912, true, LocalDate.now(), null);
+
 		Boolean seGenero = conce.generarVenta(vehiculo, dueño, 50000.0);
-		
+
 		assertTrue(seGenero);
 	}
-	
+
 	@Test
 	public void alGenerarUnaVentaObenerElDueñoActual() throws empleadosInexistentesEnConcesionaria, VentaException {
 		Empleado empleado = new Empleado("Iron", "Man", 25, 46756987);
 		conce.agregarEmpleadosAlaConcesionaria(empleado);
 		Vehiculo vehiculo = conce.buscarVehiculoPorPatente("ABC123");
-		Dueño dueño = crearDueño("Mauro", "Lombardo",29,47890912, true, LocalDate.now(), null);
+		Dueño dueño = crearDueño("Mauro", "Lombardo", 29, 47890912, true, LocalDate.now(), null);
 		conce.generarVenta(vehiculo, dueño, 50000.0);
-		
-		
+
 		Set<Dueño> dueños = new TreeSet<>(conce.buscarVehiculoPorPatenteYObtenerSusDueños("ABC123"));
-		
-		 Dueño primerDueño = dueños.iterator().next();
-	     assertEquals(dueño, primerDueño);
+
+		Dueño primerDueño = dueños.iterator().next();
+		assertEquals(dueño, primerDueño);
 
 	}
-	
+
 	@Test
-	public void alGenerarVentasObtenerElTotalDeComisonDeEmpleado() throws empleadosInexistentesEnConcesionaria, VentaException {
+	public void alGenerarVentasObtenerElTotalDeComisonDeEmpleado()
+			throws empleadosInexistentesEnConcesionaria, VentaException {
 		Empleado empleado = new Empleado("Iron", "Man", 25, 46756987);
 		conce.agregarEmpleadosAlaConcesionaria(empleado);
 		Vehiculo vehiculo = conce.buscarVehiculoPorPatente("ABC123");
-		Dueño dueño = crearDueño("Mauro", "Lombardo",29,47890912, true, LocalDate.now(), null);
+		Dueño dueño = crearDueño("Mauro", "Lombardo", 29, 47890912, true, LocalDate.now(), null);
 		conce.generarVenta(vehiculo, dueño, 50000.0);
-		
+
 		vehiculo = conce.buscarVehiculoPorPatente("AEF156");
-		dueño = crearDueño("Maurito", "Lombardito",32,4111232, true, LocalDate.now(), null);
+		dueño = crearDueño("Maurito", "Lombardito", 32, 4111232, true, LocalDate.now(), null);
 		conce.generarVenta(vehiculo, dueño, 30000.0);
-		
+
 		Double comision = empleado.getComisionGanada();
-		
+
 		assertEquals(5250.0, comision, 0.1);
-		
+
 	}
 
 	private Vehiculo ingresarAutoEnLaConcesionaria(String color, String modelo, String patente, String marca,

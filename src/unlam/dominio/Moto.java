@@ -38,12 +38,11 @@ public class Moto extends Vehiculo {
 	}
 
 	@Override
-	public boolean calcularSiPagaPatente() {
-		boolean paga = false;
-		if (this.getAniosDeUso() >= NO_PAGA_PATENTE) {
-			paga = true;
+	public boolean calcularSiPagaPatente() throws AniosIngresadosIncorrectosException {
+		if (this.getAniosDeUso() > 0 && this.getAniosDeUso() >= NO_PAGA_PATENTE) {
+			return true;
 		}
-		return paga;
+		throw new AniosIngresadosIncorrectosException();
 	}
 
 }

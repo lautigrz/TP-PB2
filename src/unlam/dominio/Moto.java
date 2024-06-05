@@ -1,5 +1,9 @@
 package unlam.dominio;
 
+import exepciones.unlam.AniosIngresadosIncorrectosException;
+import exepciones.unlam.CapacidadDeTanqueInexistenteException;
+import exepciones.unlam.VehiculoNoAptoParaFuncionarException;
+
 public class Moto extends Vehiculo {
 
 	private static final int NO_PAGA_PATENTE = 20;

@@ -1,5 +1,9 @@
 package unlam.dominio;
 
+import exepciones.unlam.AniosIngresadosIncorrectosException;
+import exepciones.unlam.CapacidadDeTanqueInexistenteException;
+import exepciones.unlam.VehiculoNoAptoParaFuncionarException;
+
 public class Auto extends Vehiculo {
 	private static final int NO_PAGA_PATENTE = 25;
 	private static final Double CONSUMO_KILOMETRO_AUTO = 8.0;

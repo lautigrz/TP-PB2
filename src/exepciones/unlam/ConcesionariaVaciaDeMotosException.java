@@ -1,4 +1,4 @@
-package unlam.dominio;
+package exepciones.unlam;
 
 public class ConcesionariaVaciaDeMotosException extends Exception {
 
